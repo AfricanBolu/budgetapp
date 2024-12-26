@@ -1,9 +1,5 @@
 import os
 import subprocess
-import xlsxwriter
-from time import sleep
-from menu import Menu
-from openpyxl import load_workbook
 from installer import install_library
 
 # List of libraries to install
@@ -11,6 +7,15 @@ libraries = ["xlsxwriter", "openpyxl"]
 
 for lib in libraries:
     install_library(lib)
+
+
+import xlsxwriter
+from time import sleep
+from menu import Menu
+from openpyxl import load_workbook
+
+
+
 
 class BudgetCalculator:
     def __init__(self):
