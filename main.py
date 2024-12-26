@@ -1,29 +1,16 @@
 import os
-import sys
 import subprocess
-
-def install_library(library_name):
-    try:
-        subprocess.check_call([os.sys.executable, "-m", "pip", "install", library_name])
-        print(f"{library_name} installed successfully!")
-    except subprocess.CalledProcessError as e:
-        print(f"Error installing {library_name}: {e}")
+import xlsxwriter
+from time import sleep
+from menu import Menu
+from openpyxl import load_workbook
+from installer import install_library
 
 # List of libraries to install
 libraries = ["xlsxwriter", "openpyxl"]
 
 for lib in libraries:
     install_library(lib)
-
-import xlsxwriter
-
-from time import sleep
-from menu import Menu
-from openpyxl import load_workbook
-
-
-
-
 
 class BudgetCalculator:
     def __init__(self):
