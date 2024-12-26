@@ -1,8 +1,24 @@
 import os
 import xlsxwriter
+import subprocess
 from time import sleep
 from menu import Menu
 from openpyxl import load_workbook
+
+
+
+def install_library(library_name):
+    try:
+        subprocess.check_call([os.sys.executable, "-m", "pip", "install", library_name])
+        print(f"{library_name} installed successfully!")
+    except subprocess.CalledProcessError as e:
+        print(f"Error installing {library_name}: {e}")
+
+# List of libraries to install
+libraries = ["xlsxwriter", "openpyxl"]
+
+for lib in libraries:
+    install_library(lib)
 
 class BudgetCalculator:
     def __init__(self):
@@ -132,7 +148,6 @@ class BudgetCalculator:
                 if os.name == 'nt':
                     os.startfile(work_path)
                 elif os.name == 'posix':
-                    import subprocess
                     subprocess.run(['open', work_path])
 
             except Exception as e:
