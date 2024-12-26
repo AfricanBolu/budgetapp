@@ -8,7 +8,7 @@ class Menu:
         print('1. Create Budget File')
         print('2. Save Budget FIle')
         print('3. Load Budget File')
-        print('4. Quit')
+        print('4. Quit\n')
 
     def get_choice(self):
         self.choice = int(input('Enter your choice: '))
