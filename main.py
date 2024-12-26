@@ -1,5 +1,6 @@
 import os
 import subprocess
+from time import sleep
 from installer import install_library
 
 # List of libraries to install
@@ -8,9 +9,10 @@ libraries = ["xlsxwriter", "openpyxl"]
 for lib in libraries:
     install_library(lib)
 
+sleep(2)
+os.system('cls' if os.name == 'nt' else 'clear')
 
 import xlsxwriter
-from time import sleep
 from menu import Menu
 from openpyxl import load_workbook
 
@@ -271,8 +273,7 @@ def run():
 
 
     # print('percentages entered: ', percent)
-    # sleep(2)
-    # os.system('cls' if os.name == 'nt' else 'clear')
+
 
 
 
