@@ -15,7 +15,7 @@ class BudgetCalculator:
     def add_data(self):
         while True:
             try:
-                self.initial = int(input('Enter your initial amount: '))
+                self.initial = float(input('Enter your initial amount: '))
                 if self.initial < 0:
                     print('Error: Amount cannot be negative')
                     continue
@@ -34,9 +34,34 @@ class BudgetCalculator:
             except ValueError:
                 print('Error: Number of percentages must be a number')
 
+        # for val in range(n):
+        #     self.types.append(input('Enter names for each percentage: '))
+        #     self.percent.append(getPercentages(f'Enter percentage for {self.types[-1]}: '))
+
         for val in range(n):
-            self.types.append(input('Enter names for each percentage: '))
-            self.percent.append(getPercentages(f'Enter percentage for {self.types[-1]}: '))
+            while True:
+                type_name = input('Enter names for each percentage: ')
+                if type_name == '':
+                    print('Error: Name cannot be empty')
+                    continue
+                elif type_name in self.types:
+                    print(f'Error: {type_name} already exists')
+                    update = input('Do you want to update? (y/n): ')
+                    if update.lower() == 'y':
+                        idx = self.types.index(type_name)
+                        new_percent = self.getPercentages(f'Enter new percentage for {type_name}: ')
+
+                        if new_percent < len(self.percent):
+                            self.percent[idx] = new_percent
+                        else:
+                            self.percent.append(new_percent)
+                        break
+                    else:
+                        continue
+                else:
+                    self.types.append(type_name)
+                    self.percent.append(self.getPercentages(f'Enter percentage for {type_name}: '))
+                    break
 
     # def calculate(self):
     #     for val in range(len(self.percent)):
@@ -48,7 +73,7 @@ class BudgetCalculator:
         for i, category in enumerate(self.types):
             amount= self.initial * (self.percent[i] / 100)
             self.final.append(amount)
-            print(f"{category}: {amount:.2f} ({self.percent[i]}%)")
+            print(f"{category}: ${amount:.2f} ({self.percent[i]}%)")
 
     def print(self):
         # print(f'Your amount entered: {self.total}')
@@ -106,43 +131,61 @@ class BudgetCalculator:
 
             workbook.close()
             print(f'File saved to {work_path}')
+
+            # ope file
+            try:
+                os.startfile(work_path)
+            except Exception as e:
+                print(f'File could not be opened: {e}')
         except PermissionError:
             print('Error: Could not write to file. Check if file is open in another program.')
             # return None
         except Exception as e:
             print(f'Error: {e}')
 
-def load_file(self, filename='budgets'):
-    path =  os.path.join(os.path.expanduser('~'), 'Documents')
-    work_path = os.path.join(path, f'{filename}.xlsx')
+    def load_file(self, filename='budgets'):
+        path =  os.path.join(os.path.expanduser('~'), 'Documents')
+        work_path = os.path.join(path, f'{filename}.xlsx')
 
-    if os.path.exists(work_path):
-        workbook = load_workbook(work_path)
-        sheet = workbook.active
+        if os.path.exists(work_path):
+            try:
+                workbook = load_workbook(work_path)
+                sheet = workbook.active
 
-        # printing data
-        data = []
-        for row in sheet.iter_rows(values_only=True):
-            data.append(row)
-            print(row)
+                # clear data
+                self.types = []
+                self.percent = []
+                self.final = []
 
-        return data
-    else:
-        print('File does not exist')
-        return None
+                # get data
+                self.initial = float(sheet['A2'].value)
 
+                for row in sheet.iter_rows(min_row=5, values_only=True):
+                    if row[0] is not None:
+                        self.types.append(row[0])
+                        self.percent.append(float(row[1]))
+                        self.final.append(float(row[2]))
 
-
-def getPercentages(prompt):
-    while True:
-        try:
-            percent = float(input(prompt))
-            if percent < 0 or percent > 100:
-                print('Error: Percentage must be between 0 and 100')
-                continue
-            return percent
-        except ValueError:
-            print('Error: Percentage must be a number')
+                print(f'File loaded from {work_path}')
+                print(f'Initial Amount: {self.initial}')
+                for i, category in enumerate(self.types):
+                    print(f"{category}: {self.final[i]} ({self.percent[i]}%)")
+            except Exception as e:
+                print(f'Error loading file: {e}')
+                return False
+        else:
+            print('File does not exist')
+            return None
+    def getPercentages(self,prompt):
+        while True:
+            try:
+                percent = float(input(prompt))
+                if percent < 0 or percent > 100:
+                    print('Error: Percentage must be between 0 and 100')
+                    continue
+                return percent
+            except ValueError:
+                print('Error: Percentage must be a number')
 
 def run():
     # percent = [10, 40, 50]
@@ -170,13 +213,21 @@ def run():
         choice = menu.get_choice()
         match choice:
             case 1:
+                # name = input('Enter file name: ')
+                # filename = name
                 app.add_data()
                 app.calculate()
                 app.print()
             case 2:
-                load_file(filename)
-            case 3:
                 app.save(filename)
+            case 3:
+                filename = input('Enter file name: ')
+                if app.load_file(filename):
+                    user_input = input("Would you want to make changes? (y/n): ")
+                    if user_input.lower() == 'y':
+                        app.add_data()
+                        app.calculate()
+                        app.print()
             case 4:
                 running = False
             case _:
@@ -187,14 +238,6 @@ def run():
     # print('percentages entered: ', percent)
     # sleep(2)
     # os.system('cls' if os.name == 'nt' else 'clear')
-
-    # results = []
-    # print(f'Your amount entered: {amount}')
-    # for val in range(n):
-    #     print(f'Your Percent for {types[val]}: {percent[val]}')
-    #     app = BudgetCalculator(amount, percent[val], types[val])
-    #     finals.append(app.calculate())
-    #     app.print()
 
 
 

@@ -6,18 +6,18 @@ class Menu:
     def display_menu(self):
         print('\n--Main Menu--')
         print('1. Create Budget File')
-        print('2. Load Budget File')
-        print('3. Save Budget FIle')
+        print('2. Save Budget FIle')
+        print('3. Load Budget File')
         print('4. Quit')
 
     def get_choice(self):
         self.choice = int(input('Enter your choice: '))
         return self.choice
 
-    def load_menu(self):
-        print('\n--Load Menu--')
-        print('1. Create New Budget')
-        print('2. Return to Main Menu')
+    # def load_menu(self):
+    #     print('\n--Load Menu--')
+    #     print('1. Create New Budget')
+    #     print('2. Return to Main Menu')
 
     # def run(self, budget):
     #     budget = BudgetCalculator()
